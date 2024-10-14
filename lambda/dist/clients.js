@@ -47,6 +47,8 @@ const handler = async (event) => {
             const expressionAttributeValues = {};
             const expressionAttributeNames = {};
             for (const key in body) {
+                if ((key === 'clientid') || (key === 'email'))
+                    continue;
                 updateExpression += `#${key} = :${key},`;
                 expressionAttributeValues[`:${key}`] = body[key];
                 expressionAttributeNames[`#${key}`] = key;

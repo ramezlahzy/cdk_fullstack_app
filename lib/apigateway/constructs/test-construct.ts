@@ -33,7 +33,7 @@ export const createTestDataEndpoint = (OdAppCdkStack: cdk.Stack, tables: tablesT
       "cognito-idp:AdminUpdateUserAttributes", // Other required actions can be added here
       "cognito-idp:AdminDeleteUser" // Add more actions as needed
     ],
-    resources: [ 'arn:aws:cognito-idp:ap-southeast-2:127214171587:userpool/ap-southeast-2_RIbd7Vx4Q'], // Replace with actual User Pool ARN if dynamic
+    resources: [ 'arn:aws:cognito-idp:eu-west-2:851725330080:userpool/eu-west-2_wGXJfJzuL'], // Replace with actual User Pool ARN if dynamic
   }));
 
   // tables.ClientTable.grantReadWriteData(testLambda);

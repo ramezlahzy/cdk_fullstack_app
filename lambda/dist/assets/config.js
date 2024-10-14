@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const config = {
-    region: 'ap-southeast-2',
-    UserPoolId: 'ap-southeast-2_RIbd7Vx4Q',
-    ClientId: '59irmed9vl9170hd4iuo0d2k57'
+    region: 'eu-west-2',
+    UserPoolId: 'eu-west-2_wGXJfJzuL',
+    ClientId: '2591tpbsnfug0e4l188tg0c5c8'
 };
 exports.default = config;

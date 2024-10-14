@@ -23,8 +23,8 @@ import { Client } from "@/shared-folders/types/client.types";
 const CLIENTS_TABLE = 'clientTable' //|| process.env.CLIENTS_TABLE!;
 const USERS_TABLE = 'userTable' //|| process.env.USER_TABLE!;
 const RESPONDENTS_TABLE = 'respondentTable' //|| process.env.RESPONDENTS_TABLE;
-const RESPONSES_TABLE = 'respondentSurveyTable'// || process.env.RESPONSES_TABLE;
-const RESPONSE_SETS_TABLE = 'responseTable' //|| process.env.RESPONSE_SETS_TABLE;
+const RESPONSES_TABLE = 'responseTable'// || process.env.RESPONSES_TABLE;
+const RESPONSE_SETS_TABLE = 'responseSetTable' //|| process.env.RESPONSE_SETS_TABLE;
 const SURVEY_TYPES_TABLE = 'surveyTypeTable' //|| process.env.SURVEY_TYPES_TABLE;
 const RESPONDENT_SURVEY_TABLE = 'respondentSurveyTable' //|| process.env.RESPONDENT_SURVEY_TABLE;
 

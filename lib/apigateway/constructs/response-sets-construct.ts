@@ -28,6 +28,7 @@ export const createSurveyEndpoint = (OdAppCdkStack: cdk.Stack, tables: tablesTyp
     tables.SurveyTypeTable.grantFullAccess(sureysLambda);
     tables.RespondentTable.grantFullAccess(sureysLambda);
     tables.UserTable.grantFullAccess(sureysLambda);
+    tables.ResponseSetTable.grant(sureysLambda,'dynamodb:PartiQLSelect');
     const surveys = api.root.addResource("surveys");
     const surveysById = surveys.addResource("{id}");
 

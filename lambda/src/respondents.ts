@@ -67,7 +67,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                 if (!email) {
                     return { statusCode: 400, body: JSON.stringify({ message: 'Email is required' }), headers };
                 }
-
+                
                 const Item: Respondent = {
                     respondentid,
                     clientid,

@@ -24,8 +24,11 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
           statusCode: 404, headers, body: JSON.stringify({ message: `Client not found with id= ${clientId}` })
         };
 
+
       const surveyTypeData = await getSurveyTypes();
+      console.log('surveyTypeData', surveyTypeData);
       const responseData = await getReponses(clientId);
+      console.log('responseData', responseData);
       const responseSets = await getResponseSets(clientId, surveyTypeData, responseData);
 
 
@@ -67,37 +70,17 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
     if (method === 'POST') {
       const survey = JSON.parse(event.body || '{}')
-      const surveytypeid = survey.surveytypeid;
-      const surveyTypeQuery = `SELECT * FROM ${SURVEY_TYPES_TABLE} WHERE surveytypeid = ?`;
-      const surveyTypeCommand = new ExecuteStatementCommand({
-        Statement: surveyTypeQuery,
-        Parameters: [surveytypeid],
-      });
-      const surveyTypeData = await docClient.send(surveyTypeCommand);
 
-      if (!surveyTypeData.Items?.length) {
-        return {
-          statusCode: 404, headers, body: JSON.stringify({ message: `Survey Type not found with id= ${surveytypeid}` })
-        };
-      }
 
       const responsesetid = uuidv4();
+      survey.responsesetid = responsesetid;
+      survey.clientid = clientId;
+
       const statusOptions = ['Open', 'Closed Auto', 'Closed Manual'];
+      console.log('survey', survey);
       const params = {
         TableName: RESPONSE_SETS_TABLE,
-        Item: {
-          responsesetid,
-          clientid: clientId,
-          surveytypeid,
-          openDate: survey.startDate,
-          closeDate: survey.endDate,
-          surveydescription: survey.introText,
-          surveythankyoumessage: survey.thankYouText,
-          demographic1: survey.demographic1,
-          demographic2: survey.demographic2,
-          surveytitle: surveyTypeData.Items[0].name,
-          status: statusOptions[Math.floor(Math.random() * statusOptions.length)],
-        }
+        Item: survey
       };
       const command = new PutCommand(params);
       await docClient.send(command);
@@ -111,6 +94,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     }
 
     if (method === 'PATCH') {
+
       const survey = JSON.parse(event.body || '{}');
       const surveyid = pathParameters.id;
       const surveyTypeQuery = `SELECT * FROM ${SURVEY_TYPES_TABLE} WHERE surveytypeid = ?`;
@@ -126,35 +110,35 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         };
       }
 
-      const params = {
+
+      let updateExpression = 'set ';
+      const expressionAttributeValues: { [key: string]: any } = {};
+      const expressionAttributeNames: { [key: string]: string } = {};
+      for (const key in survey) {
+        if (key === 'responsesetid'
+          || key === 'clientid'
+        ) continue;
+        updateExpression += `#${key} = :${key},`;
+        expressionAttributeValues[`:${key}`] = survey[key];
+        expressionAttributeNames[`#${key}`] = key;
+      }
+      updateExpression = updateExpression.slice(0, -1);
+      const command = new UpdateCommand({
         TableName: RESPONSE_SETS_TABLE,
         Key: { responsesetid: surveyid },
-        UpdateExpression: `SET surveytypeid = :surveytypeid, surveydescription = :surveydescription, 
-                            surveythankyoumessage = :surveythankyoumessage, openDate = :openDate, closeDate = :closeDate`,
-        ExpressionAttributeValues: {
-          ':surveytypeid': survey.surveytypeid,
-          ':surveydescription': survey.surveydescription,
-          ':surveythankyoumessage': survey.surveythankyoumessage,
-          ':openDate': survey.openDate,
-          ':closeDate': survey.closeDate,
-        },
-        ReturnValues: 'ALL_NEW',
-      };
-      const command = new UpdateCommand({
-        TableName: params.TableName,
-        Key: params.Key,
-        UpdateExpression: params.UpdateExpression,
-        ExpressionAttributeValues: params.ExpressionAttributeValues,
+        UpdateExpression: updateExpression,
+        ExpressionAttributeValues: expressionAttributeValues,
+        ExpressionAttributeNames: expressionAttributeNames,
         ReturnValues: 'ALL_NEW',
       });
       await docClient.send(command);
-
-      survey.responsesetid = surveyid;
+      const updatedSurvey = { responsesetid: surveyid, ...survey };
       return {
         statusCode: 200,
-        body: JSON.stringify(survey),
+        body: JSON.stringify(updatedSurvey),
         headers,
       };
+
     }
 
     return {
@@ -174,27 +158,28 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
 const getResponseSets = async (clientid: string, surveyTypes: SurveyType[], responses: Response[]): Promise<ResponseSet[]> => {
   const query = `SELECT * FROM ${RESPONSE_SETS_TABLE} WHERE clientid = ?`;
+  console.log("client id", clientid);
+  console.log("query", query);
   const addItemStatementCommand = new ExecuteStatementCommand({
     Statement: query,
     Parameters: [clientid],
   });
   const responseSetData = await docClient.send(addItemStatementCommand);
-  const responseSet = [] as ResponseSet[];
+  console.log('responseSetData', responseSetData);
+  const responseSets = [] as ResponseSet[];
   const responseSetsData = responseSetData.Items;
   for (const responseSet of responseSetsData || []) {
     const { surveytypeid, responsesetid } = responseSet;
     const surveyType = surveyTypes?.find((surveyType: SurveyType) => surveyType.surveytypeid === surveytypeid);
     responseSet.surveyType = surveyType;
-
-
     const responsesForSurvey = responses.filter((response: any) => response.responsesetid === responsesetid);
     responseSet.responsesCount = responsesForSurvey?.length;
-    responseSet.push(responseSet as ResponseSet);
+    responseSets.push(responseSet as ResponseSet);
   }
 
 
 
-  return responseSet;
+  return responseSets;
 }
 
 const getSurveyTypes = async (): Promise<SurveyType[]> => {

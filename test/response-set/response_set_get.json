@@ -2,45 +2,19 @@
   "resource": "/response-sets",
   "path": "/response-sets",
   "httpMethod": "GET",
-  "isBase64Encoded": false,
-  "multiValueQueryStringParameters": null,
-  "pathParameters": null,
-  "queryStringParameters": {
-    "clientid": "3f2b9dc8-456b-4d88-9473-2b62ad34e5fa"
-  },
-  "stageVariables": null,
   "headers": {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
-    "User-Agent": "Custom User Agent String",
-    "X-Forwarded-For": "127.0.0.1",
-    "X-Forwarded-Port": "443",
-    "X-Forwarded-Proto": "https"
-  },
-  "multiValueHeaders": {
-    "Accept": [
-      "application/json"
-    ],
-    "Content-Type": [
-      "application/json"
-    ]
-  },
-  "requestContext": {
-    "accountId": "123456789012",
-    "resourceId": "123456",
-    "stage": "prod",
-    "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
-    "requestTime": "09/Apr/2015:12:34:56 +0000",
-    "requestTimeEpoch": 1428582896000,
-    "identity": {
-      "sourceIp": "127.0.0.1",
-      "userAgent": "Custom User Agent String"
-    },
-    "path": "/prod/clients/3f2b9dc8-456b-4d88-9473-2b62ad34e5fa",
-    "resourcePath": "/users",
-    "httpMethod": "GET",
-    "apiId": "1234567890",
-    "protocol": "HTTP/1.1"
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "en-US,en;q=0.9,ar;q=0.8",
+    "Authorization": "eyJraWQiOiJRemZcLzJRR3RNSXVjTUpRdjRaRGxNelNTbHlTWkFZR3p1Vzd4RFlUZmlCMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI3NmYyNDI0NC1hMDgxLTcwNDktMmY1ZS0wMDc1MmMxOWExMGYiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl93R1hKZkp6dUwiLCJjbGllbnRfaWQiOiIyNTkxdHBic25mdWcwZTRsMTg4dGcwYzVjOCIsIm9yaWdpbl9qdGkiOiI2YmJjMjJmMS0zMTgwLTQwZmEtYTBkMS1kYTI4ZThlYTgwNzMiLCJldmVudF9pZCI6ImMyNDJiMDU5LTNjYWQtNGM0Zi05NjIzLTUxYjM3OGM1ZjU1MiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3Mjg5NDI5NzEsImV4cCI6MTcyODk0NjU3MSwiaWF0IjoxNzI4OTQyOTcxLCJqdGkiOiI2MGE0NGRiZi04ZTcwLTQ1NzctYmI0NS02YTYxYzNkMGQ3NzQiLCJ1c2VybmFtZSI6Ijc2ZjI0MjQ0LWEwODEtNzA0OS0yZjVlLTAwNzUyYzE5YTEwZiJ9.j2mJYP6KFyXrLIN3JeL9NWl3h_MxLd0iGc3PUZsITb2CPBw6eAkautT5vN9Xl7034oKGi7Mek__HdCfFqRySXcdSDlIS8VvCB-s6ebMHMzXnt5V_DRlvFmYso66fQ5sXpORmMNCT7asgY04WkQT-2ugpTkWhmw7rcKwhSFllHcUSS3NFE3eRqHY1lsBqSe440UMm5DTCYkXs-Rv2o8m8xd8focR_IUpAdMAcQ7Xd5hCT6Rw-et5vXGkraF0atIWCC6rKINmZ5ReP6ylyDYt002__iocwAKVKuO8B1-xkeKNXxeY9TuywGdQ0Say-I6nrqNXafBAvhBOXO-Q_ZZgUiw",
+    "origin": "http://localhost:5173",
+    "priority": "u=1, i",
+    "referer": "http://localhost:5173/",
+    "sec-ch-ua": "\"Google Chrome\";v=\"129\", \"Not=A?Brand\";v=\"8\", \"Chromium\";v=\"129\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"macOS\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "cross-site",
+    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"
   }
 }

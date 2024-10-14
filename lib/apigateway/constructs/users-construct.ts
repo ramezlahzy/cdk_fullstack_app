@@ -27,13 +27,19 @@ export const createUsersEndpoint = (OdAppCdkStack: cdk.Stack, tables: tablesType
       "cognito-idp:AdminUpdateUserAttributes", // Other required actions can be added here
       "cognito-idp:AdminDeleteUser" // Add more actions as needed
     ],
-    resources: [ 'arn:aws:cognito-idp:ap-southeast-2:127214171587:userpool/ap-southeast-2_RIbd7Vx4Q'], // Replace with actual User Pool ARN if dynamic
+    resources: [ 'arn:aws:cognito-idp:eu-west-2:851725330080:userpool/eu-west-2_wGXJfJzuL'], // Replace with actual User Pool ARN if dynamic
   }));
 
 
 
 
+  tables.ClientTable.grantFullAccess(usersLambda);
+  tables.ResponseTable.grantFullAccess(usersLambda);
+  tables.ResponseSetTable.grantFullAccess(usersLambda);
+  tables.SurveyTypeTable.grantFullAccess(usersLambda);
+  tables.RespondentTable.grantFullAccess(usersLambda);
   tables.UserTable.grantFullAccess(usersLambda);
+  tables.RespondentSurveyTable.grantFullAccess(usersLambda);
 
   const usersResource = api.root.addResource("users");
   const userByIdResource = usersResource.addResource("{id}");

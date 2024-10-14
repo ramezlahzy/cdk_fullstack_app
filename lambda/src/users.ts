@@ -3,9 +3,8 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, QueryCommand, ExecuteStatementCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from 'uuid';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import { getCurrentUser, headers } from './helpers';
-
-const TABLE_NAME = process.env.USERS_TABLE || 'usersTable';
+import { getCurrentUser, headers, USERS_TABLE } from './helpers';
+import config from './assets/config';
 const cognito = new CognitoIdentityServiceProvider();
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -21,7 +20,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
         if (method === 'GET') {
             if (userid) {
-                const query = `SELECT * FROM ${TABLE_NAME} WHERE userid = ?`;
+                const query = `SELECT * FROM ${USERS_TABLE} WHERE userid = ?`;
                 const addItemStatementCommand = new ExecuteStatementCommand({
                     Statement: query,
                     Parameters: [{ S: userid }],
@@ -33,10 +32,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                 return { statusCode: 200, body: JSON.stringify(response.Items[0]), headers };
             }
 
-            const query = `SELECT * FROM ${TABLE_NAME} WHERE clientid = ?`;
+            const query = `SELECT * FROM ${USERS_TABLE} WHERE clientid = ?`;
             const addItemStatementCommand = new ExecuteStatementCommand({
                 Statement: query,
-                Parameters: [{ S: clientid }],
+                Parameters: [clientid],
             });
             const response = await docClient.send(addItemStatementCommand);
             return { statusCode: 200, body: JSON.stringify(response.Items), headers };
@@ -56,14 +55,15 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                 clientid,
                 ...body,
             };
+            console.log('Item', Item);
 
             const command = new PutCommand({
-                TableName: TABLE_NAME,
+                TableName: USERS_TABLE,
                 Item,
             });
 
             const cognitoParams = {
-                UserPoolId: 'ap-southeast-2_RIbd7Vx4Q',  // Update with actual pool ID
+                UserPoolId: config.UserPoolId,  // Update with actual pool ID
                 Username: email,
                 TemporaryPassword: '12345678',
                 MessageAction: 'SUPPRESS',
@@ -79,7 +79,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
         if (method === 'PATCH' && userid) {
             const body = JSON.parse(event.body || '{}');
-            
+
             // Build the UpdateExpression dynamically
             let updateExpression = "SET";
             const expressionAttributeValues: { [key: string]: any } = {};
@@ -107,7 +107,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             updateExpression = updateExpression.slice(0, -1);
 
             const updateCommand = new UpdateCommand({
-                TableName: TABLE_NAME,
+                TableName: USERS_TABLE,
                 Key: { userid },
                 UpdateExpression: updateExpression,
                 ExpressionAttributeValues: expressionAttributeValues,
@@ -117,19 +117,19 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             });
 
             const result = await docClient.send(updateCommand);
-            return { 
-                statusCode: 200, 
-                body: JSON.stringify({ userid, ...result.Attributes }), 
-                headers 
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ userid, ...result.Attributes }),
+                headers
             };
         }
 
         return { statusCode: 400, body: JSON.stringify({ message: 'Invalid Request method or parameters', headers }) };
 
     } catch (error: any) {
-        return { 
-            statusCode: 500, 
-            body: JSON.stringify({ message: error.message, headers }) 
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ message: error.message, headers })
         };
     }
 };

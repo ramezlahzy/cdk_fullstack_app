@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
 const client_dynamodb_1 = require("@aws-sdk/client-dynamodb");
@@ -6,7 +9,7 @@ const lib_dynamodb_1 = require("@aws-sdk/lib-dynamodb");
 const uuid_1 = require("uuid");
 const aws_sdk_1 = require("aws-sdk");
 const helpers_1 = require("./helpers");
-const TABLE_NAME = process.env.USERS_TABLE || 'usersTable';
+const config_1 = __importDefault(require("./assets/config"));
 const cognito = new aws_sdk_1.CognitoIdentityServiceProvider();
 const handler = async (event) => {
     const method = event.httpMethod;
@@ -19,7 +22,7 @@ const handler = async (event) => {
         const clientid = currentUser?.clientid;
         if (method === 'GET') {
             if (userid) {
-                const query = `SELECT * FROM ${TABLE_NAME} WHERE userid = ?`;
+                const query = `SELECT * FROM ${helpers_1.USERS_TABLE} WHERE userid = ?`;
                 const addItemStatementCommand = new lib_dynamodb_1.ExecuteStatementCommand({
                     Statement: query,
                     Parameters: [{ S: userid }],
@@ -30,10 +33,10 @@ const handler = async (event) => {
                 }
                 return { statusCode: 200, body: JSON.stringify(response.Items[0]), headers: helpers_1.headers };
             }
-            const query = `SELECT * FROM ${TABLE_NAME} WHERE clientid = ?`;
+            const query = `SELECT * FROM ${helpers_1.USERS_TABLE} WHERE clientid = ?`;
             const addItemStatementCommand = new lib_dynamodb_1.ExecuteStatementCommand({
                 Statement: query,
-                Parameters: [{ S: clientid }],
+                Parameters: [clientid],
             });
             const response = await docClient.send(addItemStatementCommand);
             return { statusCode: 200, body: JSON.stringify(response.Items), headers: helpers_1.headers };
@@ -50,12 +53,13 @@ const handler = async (event) => {
                 clientid,
                 ...body,
             };
+            console.log('Item', Item);
             const command = new lib_dynamodb_1.PutCommand({
-                TableName: TABLE_NAME,
+                TableName: helpers_1.USERS_TABLE,
                 Item,
             });
             const cognitoParams = {
-                UserPoolId: 'ap-southeast-2_RIbd7Vx4Q',
+                UserPoolId: config_1.default.UserPoolId,
                 Username: email,
                 TemporaryPassword: '12345678',
                 MessageAction: 'SUPPRESS',
@@ -91,7 +95,7 @@ const handler = async (event) => {
             }
             updateExpression = updateExpression.slice(0, -1);
             const updateCommand = new lib_dynamodb_1.UpdateCommand({
-                TableName: TABLE_NAME,
+                TableName: helpers_1.USERS_TABLE,
                 Key: { userid },
                 UpdateExpression: updateExpression,
                 ExpressionAttributeValues: expressionAttributeValues,

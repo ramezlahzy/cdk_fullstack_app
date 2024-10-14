@@ -66,6 +66,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<{
       const expressionAttributeNames: { [key: string]: string } = {};
 
       for (const key in body) {
+        if((key === 'clientid') || (key === 'email')) continue;
         updateExpression += `#${key} = :${key},`;
         expressionAttributeValues[`:${key}`] = body[key];
         expressionAttributeNames[`#${key}`] = key;
