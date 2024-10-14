@@ -1,0 +1,27 @@
+{
+  "body": {
+    "emails": [
+      "rameznasaat999@gmai.com",
+      "mark@gmail.com"
+    ],
+    "surveyId": "31a92a0e-7d7e-4be3-92f5-c9f75557f383"
+  },
+  "resource": "/prod/send-emails",
+  "path": "/prod/send-emails",
+  "httpMethod": "POST",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "en-US,en;q=0.9,ar;q=0.8",
+    "Authorization": "eyJraWQiOiJRek14UGtVS1BLb05XTWphR0pLUUxcL2FsNHZuVExrd0k5NjZhYW5ub2hPOD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzOWRlYTRkOC1jMDUxLTcwMWYtNzY2Yy0xMDM5MmM4ODI2MjMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfUkliZDdWeDRRIiwiY2xpZW50X2lkIjoiNTlpcm1lZDl2bDkxNzBoZDRpdW8wZDJrNTciLCJvcmlnaW5fanRpIjoiMWUyMjQ3YmQtYzlkZS00ZTgyLTk3NTAtY2IyMjNmZjY4M2Y3IiwiZXZlbnRfaWQiOiI4ZTY5MzE4ZC1lYjIxLTRmYzgtOTA1My1iMDI4MDAyNjY5ZDUiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNzI4NTE0MDUzLCJleHAiOjE3Mjg1MTc2NTMsImlhdCI6MTcyODUxNDA1MywianRpIjoiZjczMDE0NTItN2I1Yy00MmU5LTk0MGYtODI5YjZkMDE5NWJkIiwidXNlcm5hbWUiOiIzOWRlYTRkOC1jMDUxLTcwMWYtNzY2Yy0xMDM5MmM4ODI2MjMifQ.qnnhI5wahAFVpEtuZoFa9C2-w_z2Rm-V6USvBScewsU5vyDCBLQFv6LCvAcObSbFH1O9YejpQy6-j1Ou8pdzOPG3x4uclTTtV-CuaJloyycN3EqGiiPUk5JQqM62DjVENjJVeii3C27kHutzXTnXtR6hx13AXrMvxlRTXo6Zq0dIHQONCzstn7ueAautkMdXsTAj3E5RfL_wDquUvcMnjml0QWhCF0tVvBVagAaWqsDngHGboMeTq5YHVzGjZyUiCfhPbS84iRhi8B__ga3N37mAy43flTdwRn7F78J276zXAozY2ZdODjZJ27XANqSTCQ5goi6Ljgq-B4THPVFWrQ",
+    "origin": "http://localhost:5173",
+    "priority": "u=1, i",
+    "referer": "http://localhost:5173/",
+    "sec-ch-ua": "\"Google Chrome\";v=\"129\", \"Not=A?Brand\";v=\"8\", \"Chromium\";v=\"129\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"macOS\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "cross-site",
+    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"
+  }
+}

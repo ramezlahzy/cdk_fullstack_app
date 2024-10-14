@@ -1,0 +1,46 @@
+
+{
+  "body": "{\"responsesetid\":\"3f9b4f7d-bc8f-45ea-b0f3-cd5a1e9f9434\",\"startTime\":\"2021-07-01T00:00:00.000Z\",\"endTime\":\"2021-08-01T00:00:00.000Z\",\"clientid\":\"3f2b9dc8-456b-4d88-9473-2b62ad34e5fa\",\"surveyid\":\"2b9c1a77-8743-4e4d-aeb5-7d843f5d4030\",\"surveytitle\":\"Customer Feedback 2024\",\"surveythankyoumessage\":\"Thank you for completing the survey!\",\"responseContent\":[{\"questionid\":\"1\",\"questiontext\":\"How satisfied are you with our service?\",\"response\":\"Very Satisfied\"},{\"questionid\":\"2\",\"questiontext\":\"How likely are you to recommend us to a friend?\",\"response\":\"Very Likely\"},{\"questionid\":\"3\",\"questiontext\":\"How can we improve our service?\",\"response\":\"Provide more discounts\"}],\"createdon\":\"2021-07-01T00:00:00.000Z\",\"createdby\":\"3f2b9dc8-456b-4d88-9473-2b62ad34e5fa\"}",
+  "resource": "/response-sets",
+  "path": "/response-sets",
+  "httpMethod": "POST",
+  "isBase64Encoded": false,
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
+    "User-Agent": "Custom User Agent String",
+    "X-Forwarded-For": "127.0.0.1",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "multiValueHeaders": {
+    "Accept": [
+      "application/json"
+    ],
+    "Content-Type": [
+      "application/json"
+    ]
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "resourceId": "123456",
+    "stage": "prod",
+    "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+    "requestTime": "09/Apr/2015:12:34:56 +0000",
+    "requestTimeEpoch": 1428582896000,
+    "identity": {
+      "sourceIp": "127.0.0.1",
+      "userAgent": "Custom User Agent String"
+    },
+    "path": "/prod/respondents",
+    "resourcePath": "/respondents",
+    "httpMethod": "POST",
+    "apiId": "1234567890",
+    "protocol": "HTTP/1.1"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "main": "tests.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.670.0",
+    "@aws-sdk/client-dynamodb": "^3.670.0",
+    "@aws-sdk/lib-dynamodb": "^3.670.0",
+    "@faker-js/faker": "^9.0.3",
+    "aws-lambda": "^1.0.7",
+    "uuid": "^10.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.145",
+    "@types/uuid": "^10.0.0"
+  }
+}

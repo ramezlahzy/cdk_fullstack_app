@@ -1,0 +1,46 @@
+{
+    "resource": "/users",
+    "path": "/users",
+    "httpMethod": "GET",
+    "isBase64Encoded": false,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": null,
+    "queryStringParameters": {
+      "clientid": "246f9a9c-a070-439e-ad84-e8ba6a3879db"
+    },
+    "stageVariables": null,
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
+      "User-Agent": "Custom User Agent String",
+      "X-Forwarded-For": "127.0.0.1",
+      "X-Forwarded-Port": "443",
+      "X-Forwarded-Proto": "https"  },
+    "multiValueHeaders": {
+      "Accept": [
+        "application/json"
+      ],
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "requestContext": {
+      "accountId": "123456789012",
+      "resourceId": "123456",
+      "stage": "prod",
+      "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+      "requestTime": "09/Apr/2015:12:34:56 +0000",
+      "requestTimeEpoch": 1428582896000,
+      "identity": {
+        "sourceIp": "127.0.0.1",
+        "userAgent": "Custom User Agent String"
+      },
+      "path": "/prod/clients/ab2bb56a-5ff6-47e2-9c94-b8fc5c7a30d6",
+      "resourcePath": "/users",
+      "httpMethod": "GET",
+      "apiId": "1234567890",
+      "protocol": "HTTP/1.1"
+    }
+  }
+  

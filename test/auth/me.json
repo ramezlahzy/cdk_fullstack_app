@@ -1,0 +1,20 @@
+{
+  "resource": "/prod/auth/me",
+  "path": "/prod/auth/me",
+  "httpMethod": "GET",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "en-US,en;q=0.9,ar;q=0.8",
+    "Authorization": "eyJraWQiOiJRek14UGtVS1BLb05XTWphR0pLUUxcL2FsNHZuVExrd0k5NjZhYW5ub2hPOD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzOWRlYTRkOC1jMDUxLTcwMWYtNzY2Yy0xMDM5MmM4ODI2MjMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfUkliZDdWeDRRIiwiY2xpZW50X2lkIjoiNTlpcm1lZDl2bDkxNzBoZDRpdW8wZDJrNTciLCJvcmlnaW5fanRpIjoiMjM3YjUwMGQtNTIyMy00NGE0LTg2NmMtMzI1ZDc1NTc1YzQyIiwiZXZlbnRfaWQiOiIyMTljZDY0My0xOGY2LTRkZjctYjNjMy1hZGMzYjA2YWZkMzQiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNzI4ODUzNDY5LCJleHAiOjE3Mjg4NTcwNjksImlhdCI6MTcyODg1MzQ2OSwianRpIjoiMzM3NDUwZDYtNWU0NC00ODJmLTg1NTctNzFmMjEyNDMwODM0IiwidXNlcm5hbWUiOiIzOWRlYTRkOC1jMDUxLTcwMWYtNzY2Yy0xMDM5MmM4ODI2MjMifQ.Q9hhYAi5kYZpgn-4PmXWlXWJdIbgxrxJ4mUUAm1DC22idUsrNaIc0vdoM1l4CXs6xOKZy8p_oEzYdjAaoguKwWBk22XM2TyI3EgV7YXKjjlMIbY0CJZZAuWyhz5SJPOrMYPp8VYHMvfxLQbjLvPdWYrwIijIYM2Gj-GPLoVf4H26PNyMyNfZCSp6X7s_YOCIDnP0-BVpl7pdofkAnJQE3nNZvacBLlN0XVBVSnFO2M9fdX2lJW5c7WfYOCsx54ksuHUJpIL4SWhN6iw5GRaNXXLxW8SJoBv2Cx9Yvnxo-3RiPHM5LY9thH07_Zc8j4UYSeS-TYb0H7RlVNmLmetCg",
+    "origin": "http://localhost:5173",
+    "priority": "u=1, i",
+    "referer": "http://localhost:5173/",
+    "sec-ch-ua": "\"Google Chrome\";v=\"129\", \"Not=A?Brand\";v=\"8\", \"Chromium\";v=\"129\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"macOS\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "cross-site",
+    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"
+  }
+}

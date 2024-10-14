@@ -1,0 +1,15 @@
+*.js
+!jest.config.js
+*.d.ts
+# node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+# !lambda/assets/*
+# all lambda/** should be included */
+# !lambda/**
+
+# igone all node modules and submodules
+node_modules/
+node_modules/**/*.js

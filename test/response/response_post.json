@@ -1,0 +1,46 @@
+{
+ 
+    "body": "{\"surveyId\":\"2b9c1a77-8743-4e4d-aeb5-7d843f5d4030\",\"submittedAt\":\"2023-10-04T14:53:00Z\",\"answers\":[{\"questionId\":\"1\",\"answer\":\"Yes\"},{\"questionId\":\"2\",\"answer\":\"No\"},{\"questionId\":\"3\",\"answer\":\"Maybe\"}]}",
+    "resource": "/survey-responses",
+    "path": "/survey-responses",
+    "httpMethod": "POST",
+    "isBase64Encoded": false,
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": null,
+    "stageVariables": null,
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
+      "User-Agent": "Custom User Agent String",
+      "X-Forwarded-For": "127.0.0.1",
+      "X-Forwarded-Port": "443",
+      "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+      "Accept": [
+        "application/json"
+      ],
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "requestContext": {
+      "accountId": "123456789012",
+      "resourceId": "123456",
+      "stage": "prod",
+      "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+      "requestTime": "09/Apr/2015:12:34:56 +0000",
+      "requestTimeEpoch": 1428582896000,
+      "identity": {
+        "sourceIp": "127.0.0.1",
+        "userAgent": "Custom User Agent String"
+      },
+      "path": "/prod/surveys",
+      "resourcePath": "/surveys",
+      "httpMethod": "POST",
+      "apiId": "1234567890",
+      "protocol": "HTTP/1.1"
+    }
+  }
