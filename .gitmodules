@@ -1,3 +1,0 @@
-[submodule "lambda/shared-folders"]
-	path = lambda/shared-folders
-	url = https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/shared-folders
