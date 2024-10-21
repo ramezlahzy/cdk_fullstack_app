@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { Cors, LambdaRestApi } from "aws-cdk-lib/aws-apigateway";
-import { tablesType } from '../od-app-cdk-stack';
+import { tablesType } from '../app-cdk-stack';
 
 export const createApiGateway = (OdAppCdkStack: cdk.Stack, tables: tablesType, reportResources: any) => {
 
@@ -27,7 +27,7 @@ export const createApiGateway = (OdAppCdkStack: cdk.Stack, tables: tablesType, r
       code: Code.fromAsset("lambda"), // Assume your Lambda code is in the "lambda" folder
       handler: "clients.handler",
       environment: {
-        CLIENTS_TABLE: tables.ClientTable.tableName
+        CLIENTS_TABLE: tables.table.tableName
       },
     })
   });
@@ -39,7 +39,7 @@ export const createApiGateway = (OdAppCdkStack: cdk.Stack, tables: tablesType, r
   });
   new cdk.CfnOutput(OdAppCdkStack, 'tables', {
     value: JSON.stringify({
-      ClientTable: tables.ClientTable.tableName,
+      table: tables.table.tableName,
     }),
   });
 }

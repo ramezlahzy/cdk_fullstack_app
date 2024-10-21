@@ -9,14 +9,13 @@ import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
 import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
-import { Table } from 'aws-cdk-lib/aws-dynamodb';
 import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito';
 
-export const createReportConstructs = (scope: Construct) => {
+export const createConstructs = (scope: Construct) => {
 
-    const repo = new codecommit.Repository(scope, 'ReportRepo', {
-        repositoryName: 'report-website-repo',
-        description: 'Repository for the report website',
+    const repo = new codecommit.Repository(scope, 'FrontEndRepo', {
+        repositoryName: 'frontend-repo',
+        description: 'Repository for the frontend application',
     });
 
     // // prevent removal of the repository
@@ -27,7 +26,7 @@ export const createReportConstructs = (scope: Construct) => {
 
     // const uniqueBucketName = `report-website-bucket`;
 
-    const websiteBucket = new s3.Bucket(scope, 'ReportBucket', {
+    const websiteBucket = new s3.Bucket(scope, 'Bucket', {
         websiteIndexDocument: 'index.html',
         publicReadAccess: true,
         removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -48,7 +47,7 @@ export const createReportConstructs = (scope: Construct) => {
       });
       
     // CloudFront Distribution
-    const distribution = new cloudfront.Distribution(scope, 'ReportDistribution', {
+    const distribution = new cloudfront.Distribution(scope, 'Distribution', {
         defaultBehavior: {
             origin: new origins.S3Origin(websiteBucket),
             viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -66,12 +65,12 @@ export const createReportConstructs = (scope: Construct) => {
 
 
     // Cognito Identity Pool for Unauthenticated Access
-    const identityPool = new cognito.CfnIdentityPool(scope, 'ReportIdentityPool', {
+    const identityPool = new cognito.CfnIdentityPool(scope, 'IdentityPool', {
         allowUnauthenticatedIdentities: true,
     });
 
     // IAM Role for Unauthenticated Access to DynamoDB
-    const unauthenticatedRole = new iam.Role(scope, 'ReportCognitoDefaultUnauthenticatedRole', {
+    const unauthenticatedRole = new iam.Role(scope, 'CognitoDefaultUnauthenticatedRole', {
         assumedBy: new iam.FederatedPrincipal(
             'cognito-identity.amazonaws.com',
             {
@@ -85,20 +84,6 @@ export const createReportConstructs = (scope: Construct) => {
             'sts:AssumeRoleWithWebIdentity'
         ),
     });
-    // Reference existing DynamoDB tables
-    const clientTable = Table.fromTableName(scope, 'ReportClientTable', 'ClientTable');
-    const responseTable = Table.fromTableName(scope, 'ReportResponseTable', 'responseTable');
-
-    // Add permissions to the role
-    unauthenticatedRole.addToPolicy(new iam.PolicyStatement({
-        actions: ['dynamodb:GetItem', 'dynamodb:Query'],
-        resources: [clientTable.tableArn],
-    }));
-
-    unauthenticatedRole.addToPolicy(new iam.PolicyStatement({
-        actions: ['dynamodb:PutItem'],
-        resources: [responseTable.tableArn],
-    }));
 
     // Attach the role to the Cognito Identity Pool
     new cognito.CfnIdentityPoolRoleAttachment(scope, 'ReportIdentityPoolRoleAttachment', {
@@ -109,8 +94,8 @@ export const createReportConstructs = (scope: Construct) => {
     });
 
     // CodePipeline
-    const pipeline = new codepipeline.Pipeline(scope, 'ReportWebsitePipeline', {
-        pipelineName: 'report-website-pipeline',
+    const pipeline = new codepipeline.Pipeline(scope, 'FrontEndWebsitePipeline', {
+        pipelineName: 'website-pipeline',
     });
 
     // Source Stage
@@ -126,7 +111,7 @@ export const createReportConstructs = (scope: Construct) => {
     });
 
     // Build Stage
-    const buildProject = new codebuild.PipelineProject(scope, 'ReportBuildProject', {
+    const buildProject = new codebuild.PipelineProject(scope, 'FrontEndBuildProject', {
         environment: {
             buildImage: codebuild.LinuxBuildImage.STANDARD_5_0, // Specify the build image here
         },
@@ -161,12 +146,12 @@ export const createReportConstructs = (scope: Construct) => {
 
     // Output the resources url website
 
-    new cdk.CfnOutput(scope, 'ReportWebsiteURL', {
+    new cdk.CfnOutput(scope, 'WebsiteURL', {
         value: distribution.distributionDomainName,
         description: 'The URL of the report website',
     });
 
-    const userPool = new UserPool(scope, 'UserPoolReport', {
+    const userPool = new UserPool(scope, 'UserPool', {
         selfSignUpEnabled: true,  // Disable self-sign-up
         signInAliases: {
             email: true,  // Sign in with email
@@ -194,7 +179,7 @@ export const createReportConstructs = (scope: Construct) => {
     });
 
     // Add a User Pool Client with only username/password authentication
-    const userPoolClient = new UserPoolClient(scope, 'UserPoolReportClient', {
+    const userPoolClient = new UserPoolClient(scope, 'UserPoolClient', {
         userPool,
         authFlows: {
             userPassword: true,  // Use only username and password

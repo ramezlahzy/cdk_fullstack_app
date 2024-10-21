@@ -1,4 +1,4 @@
-import { OdAppCdkStack } from './od-app-cdk-stack';
+import { AppCdkStack } from './app-cdk-stack';
 import { Stage, StageProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
@@ -7,7 +7,7 @@ export class OdAppPipelineStage extends Stage {
         super(scope, id, props);
 
         // Pass the stackName to OdAppCdkStack
-        new OdAppCdkStack(this, 'OdAppCdkStack', {
+        new AppCdkStack(this, 'OdAppCdkStack', {
             stackName: 'OdAppCdkStack',
             env: props?.env // Ensure to pass the environment properties if needed
         });
