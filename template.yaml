@@ -1628,46 +1628,6 @@ Resources:
     DeletionPolicy: Retain
     Metadata:
       aws:cdk:path: OdAppCdkStack/respondentSurveyTable/Resource
-  RDSLambdaHandlerServiceRole5A2ED0C3:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-          - Action: sts:AssumeRole
-            Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-        Version: "2012-10-17"
-      ManagedPolicyArns:
-        - Fn::Join:
-            - ""
-            - - "arn:"
-              - Ref: AWS::Partition
-              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-    Metadata:
-      aws:cdk:path: OdAppCdkStack/RDSLambdaHandler/ServiceRole/Resource
-  RDSLambdaHandlerE0D05D2B:
-    Type: AWS::Lambda::Function
-    Properties:
-      Code:
-        S3Bucket:
-          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
-      Handler: rds.handler
-      MemorySize: 128
-      Role:
-        Fn::GetAtt:
-          - RDSLambdaHandlerServiceRole5A2ED0C3
-          - Arn
-      Runtime: python3.12
-      Timeout: 30
-    DependsOn:
-      - RDSLambdaHandlerServiceRole5A2ED0C3
-    Metadata:
-      aws:cdk:path: OdAppCdkStack/RDSLambdaHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
-      aws:asset:is-bundled: false
-      aws:asset:property: Code
   dummyServiceRoleDE125B4D:
     Type: AWS::IAM::Role
     Properties:
@@ -1692,7 +1652,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -1707,7 +1667,7 @@ Resources:
       - dummyServiceRoleDE125B4D
     Metadata:
       aws:cdk:path: OdAppCdkStack/dummy/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   SharedApi9DD7A97D:
@@ -1724,7 +1684,7 @@ Resources:
         Version: "2012-10-17"
     Metadata:
       aws:cdk:path: OdAppCdkStack/SharedApi/Resource
-  SharedApiDeployment48073DC274262b0534285e1ea05f248bdaad12dc:
+  SharedApiDeployment48073DC20ddb68780890d9195b588a8e79f551da:
     Type: AWS::ApiGateway::Deployment
     Properties:
       Description: Automatically created by the RestApi construct
@@ -1754,6 +1714,11 @@ Resources:
       - SharedApipublicsurveysidE01155BC
       - SharedApipublicsurveysOPTIONS757181BE
       - SharedApipublicsurveys5170B2E7
+      - SharedApirdsOPTIONS17EB2073
+      - SharedApirds10B97390
+      - SharedApirdsresponsesGET6C71BA48
+      - SharedApirdsresponsesOPTIONS9D21EBF3
+      - SharedApirdsresponses7058E588
       - SharedApirespondentsidDELETEF36A3F37
       - SharedApirespondentsidGET235D39F9
       - SharedApirespondentsidOPTIONS26904220
@@ -1801,7 +1766,7 @@ Resources:
     Type: AWS::ApiGateway::Stage
     Properties:
       DeploymentId:
-        Ref: SharedApiDeployment48073DC274262b0534285e1ea05f248bdaad12dc
+        Ref: SharedApiDeployment48073DC20ddb68780890d9195b588a8e79f551da
       RestApiId:
         Ref: SharedApi9DD7A97D
       StageName: prod
@@ -4649,6 +4614,158 @@ Resources:
         Ref: SharedApi9DD7A97D
     Metadata:
       aws:cdk:path: OdAppCdkStack/SharedApi/Default/survey-responses/POST/Resource
+  SharedApirds10B97390:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - SharedApi9DD7A97D
+          - RootResourceId
+      PathPart: rds
+      RestApiId:
+        Ref: SharedApi9DD7A97D
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/SharedApi/Default/rds/Resource
+  SharedApirdsOPTIONS17EB2073:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+            StatusCode: "200"
+        RequestTemplates:
+          application/json: "{ statusCode: 200 }"
+        Type: MOCK
+      MethodResponses:
+        - ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Methods: true
+          StatusCode: "200"
+      ResourceId:
+        Ref: SharedApirds10B97390
+      RestApiId:
+        Ref: SharedApi9DD7A97D
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/SharedApi/Default/rds/OPTIONS/Resource
+  SharedApirdsresponses7058E588:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Ref: SharedApirds10B97390
+      PathPart: responses
+      RestApiId:
+        Ref: SharedApi9DD7A97D
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/SharedApi/Default/rds/responses/Resource
+  SharedApirdsresponsesOPTIONS9D21EBF3:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+            StatusCode: "200"
+        RequestTemplates:
+          application/json: "{ statusCode: 200 }"
+        Type: MOCK
+      MethodResponses:
+        - ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Methods: true
+          StatusCode: "200"
+      ResourceId:
+        Ref: SharedApirdsresponses7058E588
+      RestApiId:
+        Ref: SharedApi9DD7A97D
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/SharedApi/Default/rds/responses/OPTIONS/Resource
+  SharedApirdsresponsesGETApiPermissionOdAppCdkStackSharedApi3F29C5BEGETrdsresponses493D05E2:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - RDSResponseHandlerC35B91EA
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: SharedApi9DD7A97D
+            - /
+            - Ref: SharedApiDeploymentStageprod267E5D0B
+            - /GET/rds/responses
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/SharedApi/Default/rds/responses/GET/ApiPermission.OdAppCdkStackSharedApi3F29C5BE.GET..rds.responses
+  SharedApirdsresponsesGETApiPermissionTestOdAppCdkStackSharedApi3F29C5BEGETrdsresponses6E65607B:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - RDSResponseHandlerC35B91EA
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: SharedApi9DD7A97D
+            - /test-invoke-stage/GET/rds/responses
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/SharedApi/Default/rds/responses/GET/ApiPermission.Test.OdAppCdkStackSharedApi3F29C5BE.GET..rds.responses
+  SharedApirdsresponsesGET6C71BA48:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - RDSResponseHandlerC35B91EA
+                  - Arn
+              - /invocations
+      ResourceId:
+        Ref: SharedApirdsresponses7058E588
+      RestApiId:
+        Ref: SharedApi9DD7A97D
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/SharedApi/Default/rds/responses/GET/Resource
   TestHandlerServiceRole954A02F5:
     Type: AWS::IAM::Role
     Properties:
@@ -4738,7 +4855,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -4768,7 +4885,7 @@ Resources:
       - TestHandlerServiceRole954A02F5
     Metadata:
       aws:cdk:path: OdAppCdkStack/TestHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   AuthHandlerServiceRoleD970A3A9:
@@ -4845,7 +4962,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -4875,7 +4992,7 @@ Resources:
       - AuthHandlerServiceRoleD970A3A9
     Metadata:
       aws:cdk:path: OdAppCdkStack/AuthHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   ResponseSetsHandlerServiceRole635810A4:
@@ -4958,7 +5075,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -4987,7 +5104,7 @@ Resources:
       - ResponseSetsHandlerServiceRole635810A4
     Metadata:
       aws:cdk:path: OdAppCdkStack/ResponseSetsHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   SurveyTypesHandlerServiceRoleFD243480:
@@ -5049,7 +5166,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -5078,7 +5195,7 @@ Resources:
       - SurveyTypesHandlerServiceRoleFD243480
     Metadata:
       aws:cdk:path: OdAppCdkStack/SurveyTypesHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   UsersHandlerServiceRole85D5F4D9:
@@ -5170,7 +5287,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           USERS_TABLE:
@@ -5187,7 +5304,7 @@ Resources:
       - UsersHandlerServiceRole85D5F4D9
     Metadata:
       aws:cdk:path: OdAppCdkStack/UsersHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   RespondentsHandlerServiceRole132DDCA9:
@@ -5264,7 +5381,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -5293,7 +5410,7 @@ Resources:
       - RespondentsHandlerServiceRole132DDCA9
     Metadata:
       aws:cdk:path: OdAppCdkStack/RespondentsHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   ClientsHandlerServiceRoleE060EC79:
@@ -5370,7 +5487,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -5399,7 +5516,7 @@ Resources:
       - ClientsHandlerServiceRoleE060EC79
     Metadata:
       aws:cdk:path: OdAppCdkStack/ClientsHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   HourlyLambdaServiceRole458C3E14:
@@ -5481,7 +5598,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -5511,7 +5628,7 @@ Resources:
       - HourlyLambdaServiceRole458C3E14
     Metadata:
       aws:cdk:path: OdAppCdkStack/HourlyLambda/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   HourlyRule14B82990:
@@ -5630,7 +5747,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -5660,7 +5777,7 @@ Resources:
       - SendEmailLambdaServiceRole2E973985
     Metadata:
       aws:cdk:path: OdAppCdkStack/SendEmailLambda/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   PublicResponseSetsHandlerServiceRole96A8A81E:
@@ -5737,7 +5854,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -5766,7 +5883,7 @@ Resources:
       - PublicResponseSetsHandlerServiceRole96A8A81E
     Metadata:
       aws:cdk:path: OdAppCdkStack/PublicResponseSetsHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   ResponsesHandlerServiceRole0C721286:
@@ -5822,7 +5939,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: 07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404.zip
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
       Environment:
         Variables:
           CLIENTS_TABLE:
@@ -5851,13 +5968,167 @@ Resources:
       - ResponsesHandlerServiceRole0C721286
     Metadata:
       aws:cdk:path: OdAppCdkStack/ResponsesHandler/Resource
-      aws:asset:path: asset.07e3e941b67286337b4df0ed59a670404ef55c07181caa7a17633f9c0f3a2404
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  RDSLambdaHandlerServiceRole5A2ED0C3:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/RDSLambdaHandler/ServiceRole/Resource
+  RDSLambdaHandlerE0D05D2B:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 471473b2a79da697020aceb965013d75a911a82adaa54b2723517add660c7963.zip
+      Environment:
+        Variables:
+          RDS_HOST: od-reports.c9omk2ykqhw3.ap-southeast-2.rds.amazonaws.com
+          RDS_PORT: "5432"
+          RDS_USER: postgres
+          RDS_PASSWORD: bJn0TyYc4Jn54Bhu7dkt
+          RDS_DATABASE: survey_db
+      Handler: rds.lambda_handler
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+          - RDSLambdaHandlerServiceRole5A2ED0C3
+          - Arn
+      Runtime: python3.12
+      Timeout: 480
+    DependsOn:
+      - RDSLambdaHandlerServiceRole5A2ED0C3
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/RDSLambdaHandler/Resource
+      aws:asset:path: asset.471473b2a79da697020aceb965013d75a911a82adaa54b2723517add660c7963
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  RDSResponseHandlerServiceRole0D9AF8E0:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/RDSResponseHandler/ServiceRole/Resource
+  RDSResponseHandlerServiceRoleDefaultPolicy44960441:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: dynamodb:*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - clientTable0633AF8C
+                  - Arn
+              - Fn::GetAtt:
+                  - respondentTable265E52D3
+                  - Arn
+              - Fn::GetAtt:
+                  - responseSetTableE1D8A92E
+                  - Arn
+              - Fn::GetAtt:
+                  - responseTableBBB69578
+                  - Arn
+              - Fn::GetAtt:
+                  - surveyTypeTable194BDCE8
+                  - Arn
+              - Fn::GetAtt:
+                  - userTableA39440AD
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - clientTable0633AF8C
+                        - Arn
+                    - /index/*
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - surveyTypeTable194BDCE8
+                        - Arn
+                    - /index/*
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - userTableA39440AD
+                        - Arn
+                    - /index/*
+        Version: "2012-10-17"
+      PolicyName: RDSResponseHandlerServiceRoleDefaultPolicy44960441
+      Roles:
+        - Ref: RDSResponseHandlerServiceRole0D9AF8E0
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/RDSResponseHandler/ServiceRole/DefaultPolicy/Resource
+  RDSResponseHandlerC35B91EA:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d.zip
+      Environment:
+        Variables:
+          CLIENTS_TABLE:
+            Ref: clientTable0633AF8C
+          RESPONSES_TABLE:
+            Ref: responseTableBBB69578
+          RESPONSE_SETS_TABLE:
+            Ref: responseSetTableE1D8A92E
+          SURVEY_TYPES_TABLE:
+            Ref: surveyTypeTable194BDCE8
+          RESPONDENTS_TABLE:
+            Ref: respondentTable265E52D3
+          USERS_TABLE:
+            Ref: userTableA39440AD
+          RESPONDENT_SURVEY_TABLE:
+            Ref: respondentSurveyTable4D3A03D0
+      Handler: dist/rds-responses.handler
+      MemorySize: 328
+      Role:
+        Fn::GetAtt:
+          - RDSResponseHandlerServiceRole0D9AF8E0
+          - Arn
+      Runtime: nodejs18.x
+      Timeout: 120
+    DependsOn:
+      - RDSResponseHandlerServiceRoleDefaultPolicy44960441
+      - RDSResponseHandlerServiceRole0D9AF8E0
+    Metadata:
+      aws:cdk:path: OdAppCdkStack/RDSResponseHandler/Resource
+      aws:asset:path: asset.cc5884a1a4bab57740935140b608f65eecae069895b0244320605a0977bc4a3d
       aws:asset:is-bundled: false
       aws:asset:property: Code
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAA/11S0W7bMAz8lr4rWpMNxV7TFBsGbKjhrnstZIlJmMiiYVENDMH/PkiyZ3dPvCPPhyOtndw+7OT2Tt38RpvrxmIj4wsrfRXq5t+iJgOa2hZZxho68sjUD+JwdAsbBbyDYy9jHSzkWbAwCv9Zxsegr8CpN6FSKrKoh6U98UIelYdRaEvBHHtyLOMTeu6xCYzk0kcfudJnWAxXdBSaTg6ZZDwc3Q8DjpGHisiK/3hNFvbMSp9bcCxePfSz7B+ewcFi0qxGpTMKVK2MySrfINUl1pzIDE61ZBoZf6vGQtpVZPRnl2TfLTXK5kZKb6DDDiw6kLGaUHabcNE0Aa1ZBFVPF9A54QRHYVXbGCXjt+D0fMU1rqBv0Xskl/7bm/Ie2Mt9KkJ1eFIMNzXI+DP71OB532F5BgU+QWdpaKfLrNgLq1POXEANnkKvy+K/gM9k0nBC83RyzngcP7SfA3eBRY6WLNGd1ur8BMgZ5LyLIwPy4j+9b7/K3b38cnfxiJs+OMYWZF3qX8Mw7p4FAwAA
+      Analytics: v2:deflate64:H4sIAAAAAAAA/11S0W7bMAz8lrwrapMOwx6XpthQYMMMd9trIUtMzEQWDYtqYAj+90GyPbt94h15Phxp7eXu817G3Ubd/Fab69ZiJeMLK30V6uZfoyYDmpoGWcYSWvLI1PXieHILGwS8gWMvYxks5FmwMAj/IONj0Ffg1JvQWAqyqPulPfGRPCoPg9CWgjl15FjGJ/TcYRUYyaWP3nOla1gMV3QQms4OmWQ8ntyzAcfIfUFkxQdekoUDs9J1A47FHw/dLPuPZ3C0mDSr0dgZBKpGxmSVb5DqEmtOZHqnGjKVjL9VZSHtKjL6u0+y75YqZXMjpTfQYgsWHchYTCi7TXjUVAGtWQRFRxfQOeEEB2FVUxkl47fg9HzFNS6ga9B7JJf+26vyHtjLQypCtXhWDDfVy/gj+5Tg+dDi+AxG+AStpb6ZLrNiL6zOOfMISvAUOj0u/hO4JpOGE5qnk3PGw/Cu/StwG1jkaMkS3Xmtzk+AnEHOu+y2yra1kvebr9MTv0t1PMe27bkmN0mKTOajDMKRAXnxd2+7L3J/Lz9tLh5x2wXH2IAsx/oPAjYkgkEDAAA=
     Metadata:
       aws:cdk:path: OdAppCdkStack/CDKMetadata/Default
     Condition: CDKMetadataAvailable

@@ -10,6 +10,7 @@ const { ScanCommand, DeleteItemCommand } = require("@aws-sdk/client-dynamodb");
 const { ExecuteStatementCommand } = require("@aws-sdk/lib-dynamodb");
 // import {marshall} from "@aws-sdk/util-dynamodb";
 const { marshall } = require("@aws-sdk/util-dynamodb");
+const { PerformanceIndexId } = require('./assets/config');
 
 // const docClient = new DynamoDBClient({ removeUndefinedValues: true });
 const cognito = new AWS.CognitoIdentityServiceProvider();
@@ -26,14 +27,128 @@ exports.handler = async (event) => {
   const docClient = DynamoDBDocumentClient.from(client);
   // console.log("tables names "+CLIENTS_TABLE,RESPONDENTS_TABLE,RESPONSES_TABLE,RESPONSE_SETS_TABLE,SURVEY_TYPES_TABLE,USERS_TABLE,RESPONDENT_SURVEY_TABLE);
 
-  const query1 = "SELECT * FROM respondentTable" ;
+  const query1 = "SELECT * FROM respondentTable";
   const respondentsQuery = new ExecuteStatementCommand({
     Statement: query1,
   });
-  const query2 = "SELECT * FROM responseSetTable" ;
+  const query2 = "SELECT * FROM responseSetTable";
   const responseSetQuery = new ExecuteStatementCommand({
     Statement: query2,
   });
+  for (let i = 1; i <= 100; i++) {
+    const responseid = uuid.v4();
+    const response = {
+      responseid: responseid,
+      responsesetid: PerformanceIndexId,
+    }
+    const responseContent = {
+
+    }
+    const responsesetid = PerformanceIndexId;
+    const params = {
+      TableName: 'responseSetTable',
+      Key: {
+        responsesetid
+      }
+    }
+    const responseSetData = await docClient.send(new GetCommand(params));
+    const surveytypeid = responseSetData.Item.surveytypeid
+
+
+    const surveyTypeParams = {
+      TableName: 'surveyTypeTable',
+      Key: {
+        surveytypeid
+      }
+    }
+    const surveyTypeData = await docClient.send(new GetCommand(surveyTypeParams));
+    console.log("surveyTypeData", surveyTypeData);
+    const sections = surveyTypeData.Item.sections;
+    console.log("responseSetData", responseSetData);
+
+    const demographic1 = responseSetData.Item.demographic1.values;
+    const demographic2 = responseSetData.Item.demographic2.values;
+    
+    responseContent["demographic1"] = demographic1[Math.floor(Math.random() * demographic1.length)];
+    responseContent["demographic2"] = demographic2[Math.floor(Math.random() * demographic2.length)];
+    responseContent["isExported"] = false;
+    for (let i = 1; i < sections.length; i++) {
+      const questions = sections[i].questions;
+      for (let j = 0; j < questions.length; j++) {
+        const question = questions[j];
+        
+        let answer = 'not answered'
+        if (question.type === 'text') {
+          answer = faker.lorem.sentence();
+        } else if (question.type === 'rating') {
+          answer = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+        } else if (question.type === 'multiple-choice') {
+          answer = question.options[Math.floor(Math.random() * question.options.length)]
+        } else if (question.type === 'yes-no') {
+          const options = ['Yes', 'No'];
+          answer = options[Math.floor(Math.random() * options.length)];
+        } else if (question.type === 'likert') {
+          answer = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+        } else if (question.type === 'open-ended') {
+          answer = faker.lorem.sentence();
+        }
+        responseContent[question.questionId] = answer;
+      }
+    }
+    // console.log("responseContent", responseContent);
+    response.responseContent = responseContent;
+
+    const responseCommand = new PutCommand({
+      TableName: 'responseTable',
+      Item: response
+    });
+
+    await docClient.send(responseCommand);
+
+
+
+    // const surveyQuestions = surveys.find(surveyType => surveyType.surveytypeid === surveytypeid).surveyquestions;
+    // const responseContent = {};
+    // for (const key in surveyQuestions) {
+    //   const question = surveyQuestions[key];
+    //   let answer = 'not answered'
+    //   if (question.type === 'text') {
+    //     answer = faker.lorem.sentence();
+    //   } else if (question.type === 'rating') {
+    //     answer = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+    //   } else if (question.type === 'multiple-choice') {
+    //     answer = question.options[Math.floor(Math.random() * question.options.length)]
+    //   } else if (question.type === 'yes-no') {
+    //     const options = ['Yes', 'No'];
+    //     answer = options[Math.floor(Math.random() * options.length)];
+    //   }
+    //   responseContent[key] = answer;
+    // }
+    // responseContent["demographic1"] = ageGroups[Math.floor(Math.random() * ageGroups.length)];
+    // responseContent["demographic2"] = incomeLevels[Math.floor(Math.random() * incomeLevels.length)];
+
+    // responses.push(responseContent)
+    // const responseData = {
+    //   responseid: responseid,
+    //   responsesetid: responsesetid,
+    //   responsecontent: responseContent
+    // };
+    // responses.push(responseData);
+
+    // const responseCommand = new PutCommand({
+    //   TableName: RESPONSES_TABLE,
+    //   Item: responseData
+    // });
+
+    // await docClient.send(responseCommand);
+  }
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: 'All respondents and surveys connected successfully',
+    }),
+  }
+
   // {
   //   "respondentSurveyId": "unique-identifier-string", // Primary key
   //   "surveyid": "survey-identifier-string",           // ID of the associated survey
@@ -43,51 +158,51 @@ exports.handler = async (event) => {
   // }
   //connect all surveys with all respondents in RESPONDENT_SURVEY_TABLE table
   //loop on all respondents and all surveys and add them to RESPONDENT_SURVEY_TABLE
-  try {
-    const respondentsData = await docClient.send(respondentsQuery);
-    const responseSetsData = await docClient.send(responseSetQuery);
-    const respondentsItems = respondentsData.Items;
-    console.log("respondentsItems", respondentsItems);
-    console.log("responseSetsData", responseSetsData);
-    const responseSetsItems = responseSetsData.Items;
-    for (let i = 0; i < respondentsItems.length; i++) {
-      for (let j = 0; j < responseSetsItems.length; j++) {
-        const respondentSurveyId = uuid.v4();
-        const surveyid = responseSetsItems[j].responsesetid;
-        const respondentid = respondentsItems[i].respondentid;
-        const followUpTime = faker.date.future(1).toISOString();
-        const followUpEmail = false;
-        const respondentSurveyData = {
-          respondentSurveyId,
-          surveyid,
-          respondentid,
-          followUpTime,
-          followUpEmail
-        };
-        console.log("respondentSurveyData", respondentSurveyData);
-        const respondentSurveyCommand = new PutCommand({
-          TableName: 'respondentSurveyTable',
-          Item: respondentSurveyData
-        });
-        await docClient.send(respondentSurveyCommand);
-      }
-    }
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: 'All respondents and surveys connected successfully',
-        respondentsItems,
-        responseSetsItems
-      }),
-    };
-  }
-  catch (error) {
-    return {
-      statusCode: 500, body: JSON.stringify({
-        message: error.message,
-      })
-    };
-  }
+  // try {
+  //   const respondentsData = await docClient.send(respondentsQuery);
+  //   const responseSetsData = await docClient.send(responseSetQuery);
+  //   const respondentsItems = respondentsData.Items;
+  //   console.log("respondentsItems", respondentsItems);
+  //   console.log("responseSetsData", responseSetsData);
+  //   const responseSetsItems = responseSetsData.Items;
+  //   for (let i = 0; i < respondentsItems.length; i++) {
+  //     for (let j = 0; j < responseSetsItems.length; j++) {
+  //       const respondentSurveyId = uuid.v4();
+  //       const surveyid = responseSetsItems[j].responsesetid;
+  //       const respondentid = respondentsItems[i].respondentid;
+  //       const followUpTime = faker.date.future(1).toISOString();
+  //       const followUpEmail = false;
+  //       const respondentSurveyData = {
+  //         respondentSurveyId,
+  //         surveyid,
+  //         respondentid,
+  //         followUpTime,
+  //         followUpEmail
+  //       };
+  //       console.log("respondentSurveyData", respondentSurveyData);
+  //       const respondentSurveyCommand = new PutCommand({
+  //         TableName: 'respondentSurveyTable',
+  //         Item: respondentSurveyData
+  //       });
+  //       await docClient.send(respondentSurveyCommand);
+  //     }
+  //   }
+  //   return {
+  //     statusCode: 200,
+  //     body: JSON.stringify({
+  //       message: 'All respondents and surveys connected successfully',
+  //       respondentsItems,
+  //       responseSetsItems
+  //     }),
+  //   };
+  // }
+  // catch (error) {
+  //   return {
+  //     statusCode: 500, body: JSON.stringify({
+  //       message: error.message,
+  //     })
+  //   };
+  // }
 
 
 
@@ -251,46 +366,46 @@ exports.handler = async (event) => {
   //   }
 
 
-  //   for (let i = 1; i <= 100; i++) {
-  //     const responseid = uuid.v4();
-  //     const responsesetid = responseSets[i % responseSets.length].responsesetid;
-  //     const surveytypeid = responseSets[i % responseSets.length].surveytypeid;
+  // for (let i = 1; i <= 100; i++) {
+  //   const responseid = uuid.v4();
+  //   const responsesetid = responseSets[i % responseSets.length].responsesetid;
+  //   const surveytypeid = responseSets[i % responseSets.length].surveytypeid;
 
-  //     const surveyQuestions = surveys.find(surveyType => surveyType.surveytypeid === surveytypeid).surveyquestions;
-  //     const responseContent = {};
-  //     for (const key in surveyQuestions) {
-  //       const question = surveyQuestions[key];
-  //       let answer = 'not answered'
-  //       if (question.type === 'text') {
-  //         answer = faker.lorem.sentence();
-  //       } else if (question.type === 'rating') {
-  //         answer = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
-  //       } else if (question.type === 'multiple-choice') {
-  //         answer = question.options[Math.floor(Math.random() * question.options.length)]
-  //       } else if (question.type === 'yes-no') {
-  //         const options = ['Yes', 'No'];
-  //         answer = options[Math.floor(Math.random() * options.length)];
-  //       }
-  //       responseContent[key] = answer;
+  //   const surveyQuestions = surveys.find(surveyType => surveyType.surveytypeid === surveytypeid).surveyquestions;
+  //   const responseContent = {};
+  //   for (const key in surveyQuestions) {
+  //     const question = surveyQuestions[key];
+  //     let answer = 'not answered'
+  //     if (question.type === 'text') {
+  //       answer = faker.lorem.sentence();
+  //     } else if (question.type === 'rating') {
+  //       answer = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+  //     } else if (question.type === 'multiple-choice') {
+  //       answer = question.options[Math.floor(Math.random() * question.options.length)]
+  //     } else if (question.type === 'yes-no') {
+  //       const options = ['Yes', 'No'];
+  //       answer = options[Math.floor(Math.random() * options.length)];
   //     }
-  //     responseContent["demographic1"] = ageGroups[Math.floor(Math.random() * ageGroups.length)];
-  //     responseContent["demographic2"] = incomeLevels[Math.floor(Math.random() * incomeLevels.length)];
-
-  //     responses.push(responseContent)
-  //     const responseData = {
-  //       responseid: responseid,
-  //       responsesetid: responsesetid,
-  //       responsecontent: responseContent
-  //     };
-  //     responses.push(responseData);
-
-  //     const responseCommand = new PutCommand({
-  //       TableName: RESPONSES_TABLE,
-  //       Item: responseData
-  //     });
-
-  //     await docClient.send(responseCommand);
+  //     responseContent[key] = answer;
   //   }
+  //   responseContent["demographic1"] = ageGroups[Math.floor(Math.random() * ageGroups.length)];
+  //   responseContent["demographic2"] = incomeLevels[Math.floor(Math.random() * incomeLevels.length)];
+
+  //   responses.push(responseContent)
+  //   const responseData = {
+  //     responseid: responseid,
+  //     responsesetid: responsesetid,
+  //     responsecontent: responseContent
+  //   };
+  //   responses.push(responseData);
+
+  //   const responseCommand = new PutCommand({
+  //     TableName: RESPONSES_TABLE,
+  //     Item: responseData
+  //   });
+
+  //   await docClient.send(responseCommand);
+  // }
 
 
   //   return {
