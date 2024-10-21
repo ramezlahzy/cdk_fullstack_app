@@ -29,20 +29,20 @@
     "typeRoots": [
       "./node_modules/@types"
     ],
-    "baseUrl": ".",
-    "paths": {
-      "@/shared-folders/*": [
-        "src/shared-folders/src/*"
-      ]
-    },
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@/shared-folders/*": [
+    //     "src/shared-folders/src/*"
+    //   ]
+    // },
     "rootDir": "./src", // source directory
     "outDir": "./dist"       // output directory
   },
   "include": [
-    "./src/*", "src/assets",        // include source directory
+    "./src/*",// "src/assets",        // include source directory
   ],
   "exclude": [
     "node_modules",
-    "cdk.out"
+    // "cdk.out"
   ]
 }
